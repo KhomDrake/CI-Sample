@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ci-testing-sample"
+rootProject.name = "CI-Sample"
 include(":app")
 include(":contacts")
 include(":gallery")
