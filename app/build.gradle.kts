@@ -62,6 +62,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(project(":movies"))
+    implementation(project(":gallery"))
     implementation(libs.google.material)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.activity)
