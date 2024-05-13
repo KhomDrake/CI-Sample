@@ -100,4 +100,14 @@ dependencies {
     debugImplementation(libs.bigbrother.core)
     debugImplementation(libs.bigbrother.network)
     debugImplementation(libs.bigbrother.log)
+
+    testImplementation("com.willowtreeapps.assertk:assertk:0.28.1")
+    testImplementation(libs.tests.compose.ui.test)
+    testImplementation(libs.junit)
+    testImplementation(libs.tests.androidx.core.testing)
+
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.tests.compose.ui.test)
+    androidTestImplementation(libs.tests.compose.ui.manifest)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
