@@ -15,7 +15,6 @@ threetenabp-version = "1.4.6"
 koin-version = "3.4.1"
 timber-version = "5.0.1"
 kover-offline-version = "0.8.0-Beta2"
-
 compose-shimmer-verison = "1.2.0"
 
 android-lifecycle-livedata-version = "1.1.1"
@@ -111,10 +110,10 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = 'coi
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = 'koin-version' }
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = 'koin-version' }
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = 'threetenabp-version' }
-org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "orgjacoco-core-version" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber-version" }
 
 # Code Coverage
+org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "orgjacoco-core-version" }
 kover-feautures = { group = "org.jetbrains.kotlinx", name = "kover-features-jvm", version.ref = "kover-offline-version" }
 kover-offline = { group = "org.jetbrains.kotlinx", name = "kover-offline-runtime", version.ref = "kover-offline-version" }
 

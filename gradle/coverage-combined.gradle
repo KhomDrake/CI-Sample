@@ -1,0 +1,147 @@
+apply plugin: 'jacoco'
+
+tasks.withType(Test).configureEach {
+    jacoco.includeNoLocationClasses true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+project.afterEvaluate {
+
+    // getting all the project variants
+    (android.hasProperty('applicationVariants')
+            ? android.'applicationVariants'
+            : android.'libraryVariants').all { variant ->
+        // for each variant
+
+        // variant name
+        def variantName = variant.name
+
+        // task that runs all the unit tests
+        def unitTestTask = "test${variantName.capitalize()}UnitTest"
+
+        // task that runs all the ui tests
+        def uiTestTask = "connected${variantName.capitalize()}AndroidTest"
+
+        // buildDir is now deprecated, this how I would get now the build directory path
+        def buildDirectoryPath = layout.buildDirectory.dir(".").get().asFile
+
+        // registering the test coverage task for this variant
+        tasks.register(
+                "${variantName}TestCoverage",
+                // task of type jacoco report
+                JacocoReport
+        ) {
+            dependsOn("$unitTestTask", "$uiTestTask")
+
+            // Group where this task should be
+            group = "Reporting"
+            // Description of the task
+            description = "Generate Jacoco coverage reports on the ${variantName.capitalize()} build."
+
+            // config report
+            reports {
+                html {
+                    // enable html report
+                    // Android studio recommend to use enabled = true, but build fails and only works
+                    // using setEnabled
+                    setEnabled(true)
+                    // Where the html coverage file will be available after the task ends
+                    destination file("${buildDirectoryPath}/coverage-report")
+                }
+                xml {
+                    // disabling xml report
+                    setEnabled(false)
+                }
+                csv {
+                    // disabling csv report
+                    setEnabled(false)
+                }
+            }
+
+
+            // files to exclude
+            def excludes = [
+                    '**/R.class',
+                    '**/R$*.class',
+                    '**/BuildConfig.*',
+                    '**/Manifest*.*',
+                    '**/*Test*.*',
+                    // you can add here more libraries to exclude
+                    '**/android/databinding/*',
+                    '**/androidx/databinding/*',
+                    '**/di/module/*',
+                    '**/*MapperImpl*.*',
+                    '**/*$ViewInjector*.*',
+                    '**/*$ViewBinder*.*',
+                    '**/BuildConfig.*',
+                    '**/*Component*.*',
+                    '**/*BR*.*',
+                    '**/Manifest*.*',
+                    '**/*$Lambda$*.*',
+                    '**/*Companion*.*',
+                    '**/*Module.*', /* filtering Dagger modules classes */
+                    '**/*Dagger*.*',/* filtering Dagger-generated classes */
+                    '**/*MembersInjector*.*',
+                    '**/*_Factory*.*',
+                    '**/*_Provide*Factory*.*',
+                    '**/*Extensions*.*',
+                    '**/*$Result.*', /* filtering `sealed` and `data` classes */
+                    '**/*$Result$*.*', /* filtering `sealed` and `data` classes */
+                    '**/*Args*.*', /* filtering Navigation Component generated classes */
+                    '**/*Directions*.*' /* filtering Navigation Component generated classes */
+            ]
+
+            // getting all the java classes
+            def javaClasses = fileTree(dir: variant.javaCompileProvider.get().destinationDir,
+                    excludes: excludes)
+            // getting all the kotlin classes
+            def kotlinClasses = fileTree(dir: "${buildDirectoryPath}/tmp/kotlin-classes/${variantName}",
+                    excludes: excludes)
+
+            // setting the class directories
+            classDirectories.setFrom(files([javaClasses, kotlinClasses]))
+
+            // coverage Folders
+            def coverageSourceDirs = [
+                    // Main Java Folder
+                    "$project.rootDir/app/src/main/java",
+                    // Variant Java Folder
+                    "$project.projectDir/src/${variantName}/java",
+                    // Main Kotlin Folder
+                    "$project.rootDir/app/src/main/kotlin",
+                    // Variant Kotlin Folder
+                    "$project.projectDir/src/${variantName}/kotlin",
+                    // In case your project has productFlavors, you add them as well
+            ]
+
+            // setting coverage folders
+            additionalSourceDirs.setFrom(files(coverageSourceDirs))
+            sourceDirectories.setFrom(files(coverageSourceDirs))
+
+            // Unit coverage file
+            // this .exec is the file used by Jacoco to evaluate code coverage
+            // This file is generated by the unitTestTask task
+            def unitTestFile =  "${buildDirectoryPath}/outputs/unit_test_code_coverage/${variantName}UnitTest/${unitTestTask}.exec"
+
+            // UI test coverage files
+            // For each emulator, is going to be generated a .ec file, which is the file that is used
+            // By Jacoco to evaluate code coverage
+            // Because you maybe be using multiple emulators, I need to get all the files that are .ec inside
+            // the connected folder
+            def uiTestsData = fileTree(
+                    dir: "${buildDirectoryPath}/outputs/code_coverage/${variantName}AndroidTest/connected/",
+                    includes: ["**/*.ec"]
+            )
+
+            // create a list with the Unit Test coverage file
+            def coverageFiles = [unitTestFile]
+
+            // add all the UI Test coverage file
+            coverageFiles.addAll(uiTestsData.files)
+
+            // adding the coverage file to jacoco
+            executionData.from = coverageFiles
+        }
+    }
+
+}

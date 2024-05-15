@@ -1,16 +1,11 @@
 package com.poatek.gallery
 
-import assertk.assertions.isEqualTo
 import com.poatek.gallery.repository.Folder
 import com.poatek.gallery.repository.GalleryData
 import com.poatek.gallery.repository.GalleryRepository
 import com.poatek.gallery.repository.Image
-import kotlinx.coroutines.test.runTest
-import org.junit.After
-import org.junit.Test
-
-import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Test
 import java.time.LocalDate
 
 /**
@@ -18,7 +13,7 @@ import java.time.LocalDate
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class GalleryRepository {
+class GalleryRepositoryTest {
 
     lateinit var repository: GalleryRepository
     private val today = LocalDate.now()
@@ -28,7 +23,6 @@ class GalleryRepository {
         GalleryData.gallery.clear()
         GalleryData.gallery
             .apply {
-                var asd = 0
                 repeat(10) {
                     val name = "name-$it"
                     val id = it
@@ -40,23 +34,27 @@ class GalleryRepository {
                                 LocalDate.now().minusDays(index.toLong())
                             )
                         )
-                        asd++
                     }
                     add(Folder(id, name, images))
                 }
-                println(asd)
             }
 
         repository = GalleryRepository()
     }
 
     @Test
-    fun requestAllImages_shouldReturnRightAmount() = runTest {
-        assertk.assertThat(repository.images().size).isEqualTo(49)
+    fun requestAllImages_shouldReturnRightAmount() {
+        Thread.sleep(10000)
+        assert(repository.images().size == 49)
     }
 
     @Test
-    fun requestImagesFromToday_shouldReturnRightAmount() = runTest {
-        assertk.assertThat(repository.byDate(today).size).isEqualTo(10)
+    fun requestImagesFromToday_shouldReturnRightAmount() {
+        assert(repository.byDate(today).size == 10)
+    }
+
+    @Test
+    fun testing2() {
+        assert(GalleryData.asdada() == 2)
     }
 }

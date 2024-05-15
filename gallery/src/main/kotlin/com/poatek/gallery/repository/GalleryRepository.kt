@@ -38,19 +38,21 @@ object GalleryData {
         }
     }
 
+    fun asdada() = 1 + 1
+
 }
 
 class GalleryRepository {
 
-    suspend fun gallery() : List<Folder> {
+    fun gallery() : List<Folder> {
         return GalleryData.gallery
     }
 
-    suspend fun folder(id: Int) : Folder? {
+    fun folder(id: Int) : Folder? {
         return gallery().find { it.id == id }
     }
 
-    suspend fun images() : List<Image> {
+    fun images() : List<Image> {
         val list = mutableListOf<Image>()
 
         gallery().forEach {
@@ -60,7 +62,7 @@ class GalleryRepository {
         return list
     }
 
-    suspend fun byDate(date: LocalDate) : List<Image> {
+    fun byDate(date: LocalDate) : List<Image> {
         return images().filter { it.date == date }
     }
 
