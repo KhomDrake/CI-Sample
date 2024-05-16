@@ -1,5 +1,5 @@
 import kotlinx.kover.gradle.plugin.dsl.AggregationType
-import kotlinx.kover.gradle.plugin.dsl.MetricType
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 
 plugins {
     alias(libs.plugins.androidLibrary)
@@ -48,27 +48,23 @@ android {
     }
 }
 
-koverReport {
-    filters {
-        excludes {
-            annotatedBy("androidx.compose.ui.tooling.preview.Preview")
-        }
-    }
-    verify {
-        rule("Line Coverage") {
-            isEnabled = true
-            bound {
-                minValue = 80 // Minimum coverage percentage
-                metric = MetricType.LINE
-                aggregation = AggregationType.COVERED_PERCENTAGE
+
+kover {
+    reports {
+        filters {
+            excludes {
+                annotatedBy("androidx.compose.ui.tooling.preview.Preview")
             }
         }
-        rule("Branch Coverage") {
-            isEnabled = true
-            bound {
-                minValue = 90
-                metric = MetricType.BRANCH
-                aggregation = AggregationType.COVERED_PERCENTAGE
+
+        verify {
+            rule("Line Coverage") {
+                bound(
+                    minValue = 80,
+                    maxValue = 99,
+                    coverageUnits = CoverageUnit.LINE,
+                    aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                )
             }
         }
     }

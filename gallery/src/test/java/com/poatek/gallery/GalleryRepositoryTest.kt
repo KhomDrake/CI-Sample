@@ -44,7 +44,8 @@ class GalleryRepositoryTest {
 
     @Test
     fun requestAllImages_shouldReturnRightAmount() {
-        Thread.sleep(10000)
+        // here just to check sure is running unit tests
+        Thread.sleep(5000)
         assert(repository.images().size == 49)
     }
 

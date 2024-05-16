@@ -53,8 +53,9 @@ project.afterEvaluate {
                     setEnabled(false)
                 }
                 csv {
-                    // disabling csv report
-                    setEnabled(false)
+                    // enabling csv report
+                    // for some mysterious reason, I have to enable csv report to generate the unified report
+                    setEnabled(true)
                 }
             }
 

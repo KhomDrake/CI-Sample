@@ -3,7 +3,6 @@ package com.poatek.movies.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,7 +37,7 @@ enum class MovieViewTags {
 @Composable
 fun Movie(
     movie: MovieData,
-    modifier: Modifier = Modifier
+    modifier: Modifier
 ) {
     Column(
         modifier = modifier
