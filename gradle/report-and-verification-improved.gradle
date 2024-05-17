@@ -144,6 +144,7 @@ project.afterEvaluate {
             ? android.'applicationVariants'
             : android.'libraryVariants').all { variant ->
 
+
         def variantName = variant.name
 
         def unitTestTask = "test${variantName.capitalize()}UnitTest"
@@ -195,6 +196,12 @@ project.afterEvaluate {
 
         def uiTestFilesPath = "${buildDirectoryPath}/outputs/code_coverage/${variantName}AndroidTest/connected/"
 
+        def defaultThreshold = .80
+
+        def threshold = project.hasProperty("coverageThreshold")
+                ? project.coverageThreshold
+                : defaultThreshold
+
         createReportTask(
             variant,
             variantName,
@@ -214,7 +221,7 @@ project.afterEvaluate {
             coverageSourceDirs,
             unitTestFile,
             uiTestFilesPath,
-            0.36
+            threshold
         )
     }
 

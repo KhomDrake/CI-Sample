@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.extraProperties
 
 plugins {
     alias(libs.plugins.androidLibrary)
@@ -5,6 +6,10 @@ plugins {
 }
 
 apply(from = "$rootDir/gradle/report-and-verification-improved.gradle")
+
+ext {
+    set("coverageThreshold", .36)
+}
 
 android {
     namespace = "com.poatek.gallery"
