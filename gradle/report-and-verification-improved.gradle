@@ -42,14 +42,12 @@ def createReportTask(
             }
             xml {
                 // disabling xml report
-                setEnabled(true)
-                destination file("${buildDirectoryPath}/coverage-report-xml/${variantName}")
+                setEnabled(false)
             }
             csv {
                 // enabling csv report
                 // for some mysterious reason, I have to enable csv report to generate the unified report
                 setEnabled(true)
-                destination file("${buildDirectoryPath}/coverage-report-csv/${variantName}")
             }
         }
 
