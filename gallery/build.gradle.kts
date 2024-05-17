@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
-apply(from = "$rootDir/gradle/report-and-verification.gradle")
+apply(from = "$rootDir/gradle/report-and-verification-improved.gradle")
 
 android {
     namespace = "com.poatek.gallery"
