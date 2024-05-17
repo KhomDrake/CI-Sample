@@ -42,14 +42,12 @@ def createReportTask(
             }
             xml {
                 // disabling xml report
-                setEnabled(true)
-                destination file("${buildDirectoryPath}/coverage-report-xml/${variantName}")
+                setEnabled(false)
             }
             csv {
                 // enabling csv report
                 // for some mysterious reason, I have to enable csv report to generate the unified report
                 setEnabled(true)
-                destination file("${buildDirectoryPath}/coverage-report-csv/${variantName}")
             }
         }
 
@@ -140,12 +138,9 @@ def createVerificationTask(
 }
 
 project.afterEvaluate {
-
-    // getting all the project variants
     (android.hasProperty('applicationVariants')
             ? android.'applicationVariants'
             : android.'libraryVariants').all { variant ->
-
 
         def variantName = variant.name
 
@@ -153,78 +148,132 @@ project.afterEvaluate {
 
         def uiTestTask = "connected${variantName.capitalize()}AndroidTest"
 
-        def buildDirectoryPath = layout.buildDirectory.dir(".").get().asFile
+        tasks.register(
+                "${variantName}ProjectCoverage",
+                JacocoReport
+        ) {
+            dependsOn("$unitTestTask")
 
-        def excludes = [
-                '**/util/Cache.*',
-                '**/util/DiskVault*.*',
-                '**/R.class',
-                '**/R$*.class',
-                '**/BuildConfig.*',
-                '**/Manifest*.*',
-                '**/*Test*.*',
-                '**/android/databinding/*',
-                '**/androidx/databinding/*',
-                '**/di/module/*',
-                '**/*MapperImpl*.*',
-                '**/*$ViewInjector*.*',
-                '**/*$ViewBinder*.*',
-                '**/BuildConfig.*',
-                '**/*Component*.*',
-                '**/*BR*.*',
-                '**/Manifest*.*',
-                '**/*$Lambda$*.*',
-                '**/*Companion*.*',
-                '**/*Module.*',
-                '**/*Dagger*.*',
-                '**/*MembersInjector*.*',
-                '**/*_Factory*.*',
-                '**/*_Provide*Factory*.*',
-                '**/*Extensions*.*',
-                '**/*$Result.*',
-                '**/*$Result$*.*',
-                '**/*Args*.*',
-                '**/*Directions*.*'
-        ]
+            group = "Bacate"
+            description = "Bacate 2"
 
-        def coverageSourceDirs = [
-                "${project.rootDir}/app/src/main/java",
-                "${project.projectDir}/src/${variantName}/java",
-                "${project.rootDir}/app/src/main/kotlin",
-                "${project.projectDir}/src/${variantName}/kotlin",
-        ]
-
-        def unitTestFile =  "${buildDirectoryPath}/outputs/unit_test_code_coverage/${variantName}UnitTest/${unitTestTask}.exec"
-
-        def uiTestFilesPath = "${buildDirectoryPath}/outputs/code_coverage/${variantName}AndroidTest/connected/"
-
-        def defaultThreshold = .80
-
-        def threshold = project.hasProperty("coverageThreshold")
-                ? project.coverageThreshold
-                : defaultThreshold
-
-        createReportTask(
-            variant,
-            variantName,
-            unitTestTask,
-            uiTestTask,
-            buildDirectoryPath,
-            excludes,
-            coverageSourceDirs,
-            unitTestFile,
-            uiTestFilesPath
-        )
-        createVerificationTask(
-            variant,
-            variantName,
-            buildDirectoryPath,
-            excludes,
-            coverageSourceDirs,
-            unitTestFile,
-            uiTestFilesPath,
-            threshold
-        )
+            rootProject.allprojects.forEach { project ->
+                def path = "${project.layout.buildDirectory.asFile.get().absolutePath}/outputs/unit_test_code_coverage/${variantName}UnitTest/${unitTestTask}.exec"
+                println(path)
+            }
+        }
     }
-
 }
+
+//project.afterEvaluate {
+//
+////    println(rootProject.subprojects.collect { project -> project.projectDir.absolutePath.replace(rootProject.projectDir.absolutePath, "").replace("/", ":") })
+////    rootProject.subprojects.forEach { project ->
+////        if(project.hasProperty("Abc")) {
+////            println(project.name)
+////        }
+////        println(project.projectDir.absolutePath.replace(rootProject.projectDir.absolutePath, "").replace("/", ":"))
+//
+//
+//    }
+
+//    (android.hasProperty('applicationVariants')
+//            ? android.'applicationVariants'
+//            : android.'libraryVariants').all { variant ->
+//
+//        tasks.register(
+//                "${variant.name}Test",
+//                JacocoCoverageVerification
+//        ) {
+//            dependsOn(":gallery:debugCoverageVerification")
+//
+//            group = "Bacate"
+//            description = "Bacate 2"
+//        }
+//    }
+
+//    // getting all the project variants
+//    (android.hasProperty('applicationVariants')
+//            ? android.'applicationVariants'
+//            : android.'libraryVariants').all { variant ->
+//
+//
+//        def variantName = variant.name
+//
+//        def unitTestTask = "test${variantName.capitalize()}UnitTest"
+//
+//        def uiTestTask = "connected${variantName.capitalize()}AndroidTest"
+//
+//        def buildDirectoryPath = layout.buildDirectory.dir(".").get().asFile
+//
+//        def excludes = [
+//                '**/util/Cache.*',
+//                '**/util/DiskVault*.*',
+//                '**/R.class',
+//                '**/R$*.class',
+//                '**/BuildConfig.*',
+//                '**/Manifest*.*',
+//                '**/*Test*.*',
+//                '**/android/databinding/*',
+//                '**/androidx/databinding/*',
+//                '**/di/module/*',
+//                '**/*MapperImpl*.*',
+//                '**/*$ViewInjector*.*',
+//                '**/*$ViewBinder*.*',
+//                '**/BuildConfig.*',
+//                '**/*Component*.*',
+//                '**/*BR*.*',
+//                '**/Manifest*.*',
+//                '**/*$Lambda$*.*',
+//                '**/*Companion*.*',
+//                '**/*Module.*',
+//                '**/*Dagger*.*',
+//                '**/*MembersInjector*.*',
+//                '**/*_Factory*.*',
+//                '**/*_Provide*Factory*.*',
+//                '**/*Extensions*.*',
+//                '**/*$Result.*',
+//                '**/*$Result$*.*',
+//                '**/*Args*.*',
+//                '**/*Directions*.*'
+//        ]
+//
+//        def coverageSourceDirs = [
+//                "${project.rootDir}/app/src/main/java",
+//                "${project.projectDir}/src/${variantName}/java",
+//                "${project.rootDir}/app/src/main/kotlin",
+//                "${project.projectDir}/src/${variantName}/kotlin",
+//        ]
+//
+//        def unitTestFile =  "${buildDirectoryPath}/outputs/unit_test_code_coverage/${variantName}UnitTest/${unitTestTask}.exec"
+//
+//        def uiTestFilesPath = "${buildDirectoryPath}/outputs/code_coverage/${variantName}AndroidTest/connected/"
+//
+//        def defaultThreshold = .80
+//
+//        def threshold = project.hasProperty("coverageThreshold")
+//                ? project.coverageThreshold
+//                : defaultThreshold
+//
+//        createReportTask(
+//            variant,
+//            variantName,
+//            unitTestTask,
+//            uiTestTask,
+//            buildDirectoryPath,
+//            excludes,
+//            coverageSourceDirs,
+//            unitTestFile,
+//            uiTestFilesPath
+//        )
+//        createVerificationTask(
+//            variant,
+//            variantName,
+//            buildDirectoryPath,
+//            excludes,
+//            coverageSourceDirs,
+//            unitTestFile,
+//            uiTestFilesPath,
+//            threshold
+//        )
+//    }

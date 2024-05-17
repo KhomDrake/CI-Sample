@@ -1,22 +1,17 @@
 plugins {
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
-apply(from = "$rootDir/gradle/multi-module.gradle")
-
 android {
-    namespace = "com.poatek.unifiedjacoco"
+    namespace = "com.poatek.creditcard"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.poatek.unifiedjacoco"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -39,16 +34,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    testCoverage {
-        jacocoVersion = "0.8.11"
-    }
 }
 
 dependencies {
 
-    implementation(project(":gallery"))
-    implementation(project(":contacts"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
