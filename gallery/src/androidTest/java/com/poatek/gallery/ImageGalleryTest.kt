@@ -53,12 +53,4 @@ class ImageGalleryTest {
                 }
         }
     }
-
-//    @After
-//    fun shutdown() {
-//        val reportDump = KoverRuntime.getReport()
-//
-//        // save Kover binary report
-//        println("KOVER DUMP=${Base64.getEncoder().encodeToString(reportDump)}")
-//    }
 }

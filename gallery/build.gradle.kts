@@ -2,10 +2,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("jacoco")
 }
 
-apply(from = "$rootDir/gradle/coverage-combined.gradle")
+apply(from = "$rootDir/gradle/report-and-verification.gradle")
 
 android {
     namespace = "com.poatek.gallery"
@@ -88,6 +87,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
     implementation(libs.androidx.compose.tooling.debug)
+    implementation(libs.androidx.datastore)
 
     debugImplementation(libs.tests.compose.ui.manifest)
 
