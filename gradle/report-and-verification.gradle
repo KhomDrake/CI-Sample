@@ -129,11 +129,10 @@ def createReportTask(Object variant) {
                 includes: ["**/*.ec"]
         )
 
-        // create a list with the Unit Test coverage file
-        def coverageFiles = [unitTestFile]
-
-        // add all the UI Test coverage file
-        coverageFiles.addAll(uiTestsData.files)
+        def coverageFiles = [
+                unitTestFile,
+                uiTestsData
+        ]
 
         // adding the coverage file to jacoco
         executionData.from = coverageFiles
@@ -227,9 +226,10 @@ def createVerificationTask(Object variant) {
                 includes: ["**/*.ec"]
         )
 
-        def coverageFiles = [unitTestFile]
-
-        coverageFiles.addAll(uiTestsData.files)
+        def coverageFiles = [
+                unitTestFile,
+                uiTestsData
+        ]
 
         executionData.from = coverageFiles
 
